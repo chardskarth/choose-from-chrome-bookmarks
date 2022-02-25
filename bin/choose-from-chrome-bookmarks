@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 cachedChooseGui="$HOME/.cache/choose_from_bookmarks_cached_bookmarks"
 outputLogs="$HOME/.logs/choose_from_bookmarks.log"
@@ -7,7 +7,7 @@ chromeBookmarksLocation="$HOME/Library/Application Support/Google/Chrome"
 SCRIPT_NAME=`basename "$0"`
 SCRIPT_PATH=`realpath "$0"`
 SCRIPT_DIR=`dirname "$SCRIPT_PATH"`
-LIBS_DIR=`$SCRIPT_DIR/../lib`
+LIBS_DIR="$SCRIPT_DIR/../lib"
 
 
 function _choose_from_bookmarks__refresh_bookmarks() {
@@ -46,7 +46,7 @@ function _choose_from_bookmarks__open_in_chrome() {
 }
 
 
-function _choose_from_bookmarks__main {
+function _choose_from_bookmarks__main() {
   usage="usage: $SCRIPT_NAME <command>
   
   These are the available commands:
@@ -60,12 +60,12 @@ function _choose_from_bookmarks__main {
     return
   fi
 
-  if [ $1 == 'refreshlist' ]; then
+  if [[ "$1" == 'refreshlist' ]]; then
     _choose_from_bookmarks__refresh_bookmarks
     return
   fi
 
-  if [ $1 == 'triggerchoose' ]; then
+  if [[ "$1" == 'triggerchoose' ]]; then
 		_choose_from_bookmarks__trigger_bookmarks
     return
   fi
