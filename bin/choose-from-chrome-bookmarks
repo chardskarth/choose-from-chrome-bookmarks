@@ -1,0 +1,78 @@
+#!/bin/sh
+
+cachedChooseGui="$HOME/.cache/choose_from_bookmarks_cached_bookmarks"
+outputLogs="$HOME/.logs/choose_from_bookmarks.log"
+chromeBookmarksLocation="$HOME/Library/Application Support/Google/Chrome"
+
+SCRIPT_NAME=`basename "$0"`
+SCRIPT_PATH=`realpath "$0"`
+SCRIPT_DIR=`dirname "$SCRIPT_PATH"`
+LIBS_DIR=`$SCRIPT_DIR/../lib`
+
+
+function _choose_from_bookmarks__refresh_bookmarks() {
+	rm "$cachedChooseGui" &>> "$outputLogs"
+
+	bookmarkfiles=$(find "$chromeBookmarksLocation" -maxdepth 2 -name "Bookmarks")
+	
+	echo "Found $(echo "$bookmarkfiles" | wc -l) bookmark files" >> "$outputLogs"
+	echo "Starting build of file. Using $LIBS_DIR/lib/read-bookmarks-from-directory.kts"
+	while read -r line ;
+		do echo "checking $line" >> "$outputLogs"
+		"$LIBS_DIR/read-bookmarks-from-directory.kts" $line >> "$cachedChooseGui"
+	done <<< "$bookmarkfiles"
+
+	echo "Finished building $cachedChooseGui"
+}
+
+
+function _choose_from_bookmarks__trigger_bookmarks() {
+	local selected
+
+	selected=$(cat "$cachedChooseGui" | choose -s 20 -m -n 20) 
+	if [[ $selected == *" >> "* ]]; then
+		selectedurl=$(echo "$selected" | awk -F " >> " '{print $2}')
+
+		_choose_from_bookmarks__open_in_chrome "$selectedurl"
+	else
+		[[ ! -z $selected ]] && "${=selected}"
+	fi
+
+}
+
+
+function _choose_from_bookmarks__open_in_chrome() {
+	open -a "Google Chrome.app" $@
+}
+
+
+function _choose_from_bookmarks__main {
+  usage="usage: $SCRIPT_NAME <command>
+  
+  These are the available commands:
+
+  refreshlist    Refresh a cached list of bookmarks
+  triggerchoose	 Trigger choose
+	"
+
+  if [ "$#" -eq 0 ]; then
+    printf "$usage"
+    return
+  fi
+
+  if [ $1 == 'refreshlist' ]; then
+    _choose_from_bookmarks__refresh_bookmarks
+    return
+  fi
+
+  if [ $1 == 'triggerchoose' ]; then
+		_choose_from_bookmarks__trigger_bookmarks
+    return
+  fi
+
+  printf "Unknown command."
+  printf "$usage"
+}
+
+_choose_from_bookmarks__main $@
+
