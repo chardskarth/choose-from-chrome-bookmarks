@@ -11,9 +11,9 @@ Right now it just works for my use case, but feel free to submit an MR.
 
 Some gotchas:
 1. [Install script]() is very simple. You just need to add the script in your path.
-2. There's no confiration file.
-	2. Chrome bookmarks path is hardcoded [here](https://github.com/chardskarth/choose-from-chrome-bookmarks/blob/a181c5c5e6a7ca9da388dd230f1c167301028079/bin/choose-from-chrome-bookmarks#L3)
-	1. Logging is can be found at [~/.logs/](https://github.com/chardskarth/choose-from-chrome-bookmarks/blob/a181c5c5e6a7ca9da388dd230f1c167301028079/bin/choose-from-chrome-bookmarks#L4)
+2. There's no confiration file.  
+	1. Chrome bookmarks path is hardcoded [here](https://github.com/chardskarth/choose-from-chrome-bookmarks/blob/a181c5c5e6a7ca9da388dd230f1c167301028079/bin/choose-from-chrome-bookmarks#L3)
+	2. Logging is can be found at [~/.logs/](https://github.com/chardskarth/choose-from-chrome-bookmarks/blob/a181c5c5e6a7ca9da388dd230f1c167301028079/bin/choose-from-chrome-bookmarks#L4)
 3. You can [add other source](#adding-other-source-to-search) for completion by sourcing a zsh script that contains functions `_choose_from_bookmarks__add_*` from lib path.
 
 
