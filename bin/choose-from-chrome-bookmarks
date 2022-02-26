@@ -16,13 +16,22 @@ function _choose_from_bookmarks__refresh_bookmarks() {
 	bookmarkfiles=$(find "$chromeBookmarksLocation" -maxdepth 2 -name "Bookmarks")
 	
 	echo "Found $(echo "$bookmarkfiles" | wc -l) bookmark files" >> "$outputLogs"
-	echo "Starting build of file. Using $LIBS_DIR/lib/read-bookmarks-from-directory"
+	echo "Starting build of file. Using $LIBS_DIR/lib/read-bookmarks-from-directory" >> "$outputLogs"
 	while read -r line ;
 		do echo "checking $line" >> "$outputLogs"
 		"$LIBS_DIR/read-bookmarks-from-directory" $line >> "$cachedChooseGui"
 	done <<< "$bookmarkfiles"
+	
+	echo "Looking for other sources" >> "$outputLogs"
+	source <(cat $LIBS_DIR/*.zsh)
+	othersources=$(print -l ${(ok)functions} | grep -E -e "^_choose_from_bookmarks__add_")
 
-	echo "Finished building $cachedChooseGui"
+	while read -r line ;
+		do echo "checking $line" >> "$outputLogs"
+		$line >> "$cachedChooseGui"
+	done <<< "$othersources"
+
+	echo "Finished building $cachedChooseGui" >> "$outputLogs"
 }
 
 
