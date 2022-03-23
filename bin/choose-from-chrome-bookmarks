@@ -62,6 +62,7 @@ function _choose_from_bookmarks__main() {
 
   refreshlist    Refresh a cached list of bookmarks
   triggerchoose	 Trigger choose
+  opendirectory	 Open this repository in your editor
 	"
 
   if [ "$#" -eq 0 ]; then
@@ -72,11 +73,11 @@ function _choose_from_bookmarks__main() {
   if [[ "$1" == 'refreshlist' ]]; then
     _choose_from_bookmarks__refresh_bookmarks
     return
-  fi
-
-  if [[ "$1" == 'triggerchoose' ]]; then
+  elif [[ "$1" == 'triggerchoose' ]]; then
 		_choose_from_bookmarks__trigger_bookmarks
     return
+  elif [[ "$1" == 'opendirectory' ]]; then
+		$EDITOR $SCRIPT_DIR/..
   fi
 
   printf "Unknown command."
