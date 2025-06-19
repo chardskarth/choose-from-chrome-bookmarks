@@ -1,12 +1,12 @@
-#!/bin/zsh
-
-bookmarkfile="$1"
-
-kscript - "$bookmarkfile"<<__EOF_END
+//#!/usr/bin/env kotlin -Xplugin=/Users/chardskarth/.local/share/mise/installs/kotlin/2.1.21/kotlinc/lib/kotlinx-serialization-compiler-plugin.jar # setting up the kotlin environment
 @file:DependsOn("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.30")
 @file:DependsOn("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 
-@file:CompilerOpts("-Xplugin=$HOME/.sdkman/candidates/kotlin/current/lib/kotlinx-serialization-compiler-plugin.jar")
+// @file:CompilerOpts("")
+
+// Kotlin code.
+//
+//
 
 import kotlinx.serialization.*
 import java.io.File
@@ -28,19 +28,19 @@ val bookmarkBarItems: List<BookmarkBarItem> = json.decodeFromString(bookmarkCont
 bookmarkBarItems.flatMap {
     flattenByFolder(it.name, it)
 }.forEach {
-    println("\${it.name} >> \${it.url}")
+    println("${it.name} >> ${it.url}")
 }
 
 //println(json.encodeToString(bookmarkBarItems))
 //println(json.encodeToString(flattenedByFolder))
 
 fun flattenByFolder(key: String, bookmarkBarItem: BookmarkBarItem): List<FlattenedByFolder> {
-    return bookmarkBarItem.getBookmarks("\${key.smartTrailing(".")}\${bookmarkBarItem.name}") + bookmarkBarItem.getFolders().flatMap {
-        flattenByFolder("\$key.\${it.name}", it)
+    return bookmarkBarItem.getBookmarks("${key.smartTrailing(".")}${bookmarkBarItem.name}") + bookmarkBarItem.getFolders().flatMap {
+        flattenByFolder("$key.${it.name}", it)
     }
 }
 
-fun String.smartTrailing(toAppend: String) = if (this != "") "\$this\$toAppend" else this
+fun String.smartTrailing(toAppend: String) = if (this != "") "$this$toAppend" else this
 
 @Serializable
 data class BookmarkBarItem(
@@ -54,7 +54,7 @@ data class BookmarkBarItem(
     fun getBookmarks(key: String) = children?.filter {
         it.isFolder.not()
     }?.map {
-      FlattenedByFolder("\$key.\${it.name}", it.url!!)
+      FlattenedByFolder("$key.${it.name}", it.url!!)
     } ?: listOf()
 
     fun getFolders() = children?.filter {
@@ -68,7 +68,5 @@ data class FlattenedByFolder(
     val name: String,
     val url: String,
 )
-__EOF_END
 
-printf '%s' "$res"
 

@@ -19,7 +19,8 @@ function _choose_from_bookmarks__refresh_bookmarks() {
 	echo "Starting build of file. Using $LIBS_DIR/lib/read-bookmarks-from-directory" >> "$outputLogs"
 	while read -r line ;
 		do echo "checking $line" >> "$outputLogs"
-		"$LIBS_DIR/read-bookmarks-from-directory" $line >> "$cachedChooseGui"
+		# "$LIBS_DIR/read-bookmarks-from-directory" $line >> "$cachedChooseGui"
+    kotlin -Xplugin=$KOTLIN_HOME/lib/kotlinx-serialization-compiler-plugin.jar $LIBS_DIR/read-bookmarks-from-directory.main.kts  $line >> "$cachedChooseGui"
 	done <<< "$bookmarkfiles"
 	
 	echo "Looking for other sources" >> "$outputLogs"
